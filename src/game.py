@@ -35,6 +35,8 @@ from fortress import Fortress
 
 import defaults
 
+import cv2
+
 get_time = time.time
 if plat.system() == 'Windows':
     get_time = time.clock
@@ -351,7 +353,11 @@ class Game(object):
         self.missile_list = MissileList(self)
         self.shell_list = ShellList(self)
         self.ship = Ship(self)
-        
+        #self.img = 255+np.zeros((int(self.world.bottom-self.world.top),int(self.world.right-self.world.left),3),np.uint8)
+        self.img = cv2.resize(cv2.imread("resources/gfx/background.png",cv2.IMREAD_COLOR),(int(self.world.right-self.world.left),int(self.world.bottom-self.world.top)))
+
+        self.img = 255-self.img
+
         self.gametimer.reset()
         
         if self.config['Fortress']['fortress_exists']:
@@ -540,6 +546,15 @@ class Game(object):
             self.gameevents.add("game", "start", type='EVENT_SYSTEM')
         elif self.state == self.STATE_PLAY:
             self.ship.compute()
+            if not self.ship.jumped:
+
+                overlay = np.zeros((int(self.world.bottom-self.world.top),int(self.world.right-self.world.left),3),np.uint8)
+
+
+                cv2.line(overlay,(int(self.ship.position.x-self.world.left),int(self.ship.position.y-self.world.top)),(int(self.ship.oldPosx-self.world.left),int(self.ship.oldPosy-self.world.top)),(255,255,255),self.config['Playback']['line_width'])
+
+                cv2.addWeighted(overlay,self.config['Playback']['intensity']/100.0,self.img,1.0,0,self.img)
+
             distance = self.ship.get_distance_to_point(self.WORLD_WIDTH / 2, self.WORLD_HEIGHT / 2)
             flight_max_inc = self.config['Score']['flight_max_increment']
             dmod = 1 - (distance - self.smallhex.radius * 1.125) / (self.WORLD_WIDTH / 2)
@@ -604,6 +619,8 @@ class Game(object):
             if self.gametimer.elapsed() > self.config['General']['game_time']:
                 self.gameevents.add("game", "over", type='EVENT_SYSTEM')
                 self.state = self.STATE_SCORES
+                self.img = 255-self.img
+                cv2.imwrite('../../Spacefortress/traced_map.jpg',(self.img),[int(cv2.IMWRITE_JPEG_QUALITY), 100])
 
     def process_events(self):
         """processes internal list of game events for this frame"""

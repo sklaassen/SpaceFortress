@@ -40,6 +40,17 @@ class Ship(Token):
         self.joy_turn = 0.0
         self.joy_thrust = 0.0
         self.invert_x = 1.0
+        self.wind_x = self.app.config['Ship']['wind_x']
+        self.wind_y = self.app.config['Ship']['wind_y']
+
+        if(self.app.config['Playback']['Track_Position']):
+            self.outFile = open("../../Spacefortress/Position.csv","w")
+            self.outFile.write("Xpos("+str(self.app.world.left)+"/"+str(self.app.world.right)+"),Ypos("+str(self.app.world.top)+"/"+str(self.app.world.bottom)+")")
+
+        self.oldPosx = 0
+        self.oldPosy = 0
+        self.jumped = False
+
         if self.app.config['Joystick']['invert_x']:
             self.invert_x = -1.0
         self.invert_y = 1.0
@@ -85,7 +96,9 @@ class Ship(Token):
                 self.acceleration = 0
 
         self.velocity.x += self.acceleration * math.cos(math.radians(self.orientation))
+        self.velocity.x += self.wind_x
         self.velocity.y += self.acceleration * math.sin(math.radians(self.orientation))
+        self.velocity.y += self.wind_y
 
         if self.velocity.x > self.max_vel:
             self.velocity.x = self.max_vel
@@ -96,20 +109,34 @@ class Ship(Token):
             self.velocity.y = self.max_vel
         elif self.velocity.y < -self.max_vel:
             self.velocity.y = -self.max_vel
+
+        self.oldPosx = int(self.position.x)
+        self.oldPosy = int(self.position.y)
+        self.jumped = False
+
         self.position.x += self.velocity.x
         self.position.y -= self.velocity.y
         if self.position.x > self.app.world.right:
             self.position.x = self.app.world.left
             self.app.gameevents.add("warp", "right")
+            self.jumped = True
         if self.position.x < self.app.world.left:
             self.position.x = self.app.world.right
             self.app.gameevents.add("warp", "left")
+            self.jumped = True
         if self.position.y > self.app.world.bottom:
             self.position.y = self.app.world.top
             self.app.gameevents.add("warp", "down")
+            self.jumped = True
         if self.position.y < self.app.world.top:
             self.position.y = self.app.world.bottom
             self.app.gameevents.add("warp", "up")
+            self.jumped = True
+
+
+        if(self.app.config['Playback']['Track_Position']):
+            self.outFile.write('\n'+str(self.position.x)+","+str(self.position.y))
+
 
     def fire(self):
         """fires missile"""

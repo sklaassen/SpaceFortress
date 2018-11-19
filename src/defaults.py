@@ -116,6 +116,8 @@ def get_config():
     cfg.add_setting('Ship', 'ship_vel_x', 0, 'Initial ship velocity in x direction')
     cfg.add_setting('Ship', 'ship_vel_y', 0, 'Initial ship velocity in y direction.')
     cfg.add_setting('Ship', 'colored_damage', True, type=CT_CHECKBOX)
+    cfg.add_setting('Ship', 'wind_x', 0, 'wind in x direction', type=CT_DBLSPINBOX)
+    cfg.add_setting('Ship', 'wind_y', 0, 'wind in y direction', type=CT_DBLSPINBOX)
 
     cfg.add_setting('Missile', 'missile_max', 50, 'Maximum number of missiles possible')
     cfg.add_setting('Missile', 'missile_num', 50, 'Number of missiles at start of game')
@@ -232,7 +234,10 @@ def get_config():
     cfg.add_setting('Joystick', 'shots_button', 1)
     cfg.add_setting('Joystick', 'pnts_button', 2)
 
-    cfg.add_setting('Playback', 'playback', False, type=2)
-    cfg.add_setting('Playback', 'makevideo', False, type=2)
+    cfg.add_setting('Playback', 'Track_Position', False, type=2)
+    cfg.add_setting('Playback', 'Generate_Image', False, type=2)
+    cfg.add_setting('Playback', 'line_width', 1)
+    cfg.add_setting('Playback', 'intensity', 1)
+
 
     return cfg
