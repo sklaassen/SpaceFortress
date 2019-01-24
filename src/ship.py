@@ -8,6 +8,7 @@ from sftoken import Token
 import pkg_resources
 
 import pygl2d
+import datetime
 
 class Ship(Token):
     """represents the fortress object that typically appears in the center of the worldsurf"""
@@ -44,7 +45,8 @@ class Ship(Token):
         self.wind_y = self.app.config['Ship']['wind_y']
 
         if(self.app.config['Playback']['Track_Position']):
-            self.outFile = open("../../Spacefortress/Position.csv","w")
+            now = datetime.datetime.now()
+            self.outFile = open("../Recordings/"+str(now.year) + "_"+str(now.month)+"_" + str(now.day) + "_" + str(now.hour) + "_" + str(now.minute)+"Position.csv","w")
             self.outFile.write("Xpos("+str(self.app.world.left)+"/"+str(self.app.world.right)+"),Ypos("+str(self.app.world.top)+"/"+str(self.app.world.bottom)+")")
 
         self.oldPosx = 0

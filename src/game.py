@@ -36,6 +36,7 @@ from fortress import Fortress
 import defaults
 
 import cv2
+import datetime
 
 get_time = time.time
 if plat.system() == 'Windows':
@@ -620,7 +621,8 @@ class Game(object):
                 self.gameevents.add("game", "over", type='EVENT_SYSTEM')
                 self.state = self.STATE_SCORES
                 self.img = 255-self.img
-                cv2.imwrite('../../Spacefortress/traced_map.jpg',(self.img),[int(cv2.IMWRITE_JPEG_QUALITY), 100])
+                now = datetime.datetime.now()
+                cv2.imwrite('../Recordings/' + str(now.year) + "_"+str(now.month)+"_" + str(now.day) + "_" + str(now.hour) + "_" + str(now.minute)+"_" + 'lines.jpg',(self.img),[int(cv2.IMWRITE_JPEG_QUALITY), 100])
 
     def process_events(self):
         """processes internal list of game events for this frame"""

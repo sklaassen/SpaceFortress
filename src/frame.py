@@ -136,5 +136,5 @@ class Frame(object):
         self.p7_surf.draw(self.p7_rect.topleft)
         self.p8_surf.draw(self.p8_rect.topleft)
 
-        pygame.image.save(window)
+        #pygame.image.save(window)
 

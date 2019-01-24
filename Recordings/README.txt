@@ -1,0 +1,1 @@
+This folder is just for files that are being recorded. this file is here so that git registers it as an actual folder
