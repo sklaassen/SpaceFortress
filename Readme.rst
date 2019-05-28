@@ -46,3 +46,8 @@ Run the config editor:
 
   python src/configeditor.py
 
+Modifications
+=========
+* wind
+* ship path throughout trial as image
+* ship cordinate file as CSV
